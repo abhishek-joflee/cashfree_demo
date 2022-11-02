@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cferrorresponse/cferrorresponse.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cfpayment/cfdropcheckoutpayment.dart';
@@ -49,7 +52,17 @@ class _MyAppState extends State<MyApp> {
   }
 
   void onError(CFErrorResponse errorResponse, String orderId) {
-    print("Error while making payment");
+    final errorData = {
+      'orderId': orderId,
+      'code': errorResponse.getCode(),
+      'Message': errorResponse.getMessage(),
+      'getStatus': errorResponse.getStatus(),
+      'getType': errorResponse.getType(),
+    };
+    log(
+      "Error while making payment",
+      error: json.encode(errorData),
+    );
   }
 
   String orderId = "Order0001";
