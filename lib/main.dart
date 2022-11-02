@@ -65,9 +65,8 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  String orderId = "Order0001";
-  String orderToken =
-      "7M9JCN4MzUIJiOicGbhJCLiQ1VKJiOiAXe0Jye.BD0nI4ATOkRDNzQmMyYzM2IiOiQHbhN3XiwCN4QDM3kTO2YTM6ICc4VmIsIiUOlkI6ISej5WZyJXdDJXZkJ3biwiIxIiOiQnb19WbBJXZkJ3biwiIxADMwIXZkJ3TiojIklkclRmcvJye.hDp-g1JFGxgIElFAA80LdMo6W_KfTutsrC_SO8jxT0VLK0HFumejXGJzUMwM--qBhF";
+  String orderId = "order_2613772GzJmBHfAGqJDzC3D8ODSG8x61d";
+  String orderToken = "RdnhlZ3zTrAJn7IYLF5x";
   CFEnvironment environment = CFEnvironment.SANDBOX;
 
   CFSession? createSession() {
