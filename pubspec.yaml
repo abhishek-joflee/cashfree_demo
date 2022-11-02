@@ -11,15 +11,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  cupertino_icons: ^1.0.2
-  cashfree_pg: ^2.0.12+32
+  flutter_cashfree_pg_sdk: ^0.0.1+1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^2.0.0
+  very_good_analysis: ^3.1.0
 
 flutter:
   uses-material-design: true
