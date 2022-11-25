@@ -332,14 +332,15 @@ class _MyAppState extends State<MyApp> {
   // UPI Intent
   Future<void> makeUpiPayment() async {
     //Replace with actual values
-    String orderId = "ORDER_ID";
-    String stage = "PROD";
-    String orderAmount = "ORDER_AMOUNT";
-    String tokenData = "TOKEN_DATA";
+    String orderId = "order_1950952I1YpPbFLzYefkl19G6dKmj8Qhs";
+    String stage = "TEST";
+    String orderAmount = "15";
+    String tokenData =
+        "dL9JCN4MzUIJiOicGbhJCLiQ1VKJiOiAXe0Jye.N7QfiE2N1MmNmZTN0ADOzYjI6ICdsF2cfJCL3YzNyQTOxcjNxojIwhXZiwiIS5USiojI5NmblJnc1NkclRmcvJCL1EjOiQnb19WbBJXZkJ3biwiIzhWU4oWbLRmNHlTMstmZllleMZkYQBXWxkkM1kDM1kTMfJXZkJ3biojIklkclRmcvJye.NWT3eOh2Pjlig06ee85im8t4gbEvKk32Zg8GDxorOgG8bQcYGjB3dNFza26E8hag7a";
     String customerName = "Customer Name";
     String orderNote = "Order_Note";
     String orderCurrency = "INR";
-    String appId = "APP_ID";
+    String appId = "1950953d7e9231a3f1df2c9a69590591";
     String customerPhone = "Customer Phone";
     String customerEmail = "sample@gmail.com";
     String notifyUrl = "https://test.gocashfree.com/notify";
@@ -368,14 +369,15 @@ class _MyAppState extends State<MyApp> {
   // SEAMLESS UPI Intent
   Future<void> seamlessUPIIntent() async {
     //Replace with actual values
-    String orderId = "ORDER_ID";
-    String stage = "PROD";
-    String orderAmount = "ORDER_AMOUNT";
-    String tokenData = "TOKEN_DATA";
+    String orderId = "order_1950952I1YpPbFLzYefkl19G6dKmj8Qhs";
+    String stage = "TEST";
+    String orderAmount = "15";
+    String tokenData =
+        "9N9JCN4MzUIJiOicGbhJCLiQ1VKJiOiAXe0Jye.CHQfiYWYhZmMjZzM0ADOzYjI6ICdsF2cfJCLyUjMyQTOxcjNxojIwhXZiwiIS5USiojI5NmblJnc1NkclRmcvJCL1EjOiQnb19WbBJXZkJ3biwiI2pmN5JUQ4JXV0EGeG5UezQnUMpmN4oGWxkkM1kDM1kTMfJXZkJ3biojIklkclRmcvJye.bmpWVAlEHcMwvxTFgneKB4uM5Cf8heL5yGqKIN-EayTTxXkLzNRqaCXvWpfegIpueL";
     String customerName = "Customer Name";
     String orderNote = "Order_Note";
     String orderCurrency = "INR";
-    String appId = "APP_ID";
+    String appId = "1950953d7e9231a3f1df2c9a69590591";
     String customerPhone = "Customer Phone";
     String customerEmail = "sample@gmail.com";
     String notifyUrl = "https://test.gocashfree.com/notify";
