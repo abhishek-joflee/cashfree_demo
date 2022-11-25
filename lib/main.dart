@@ -223,18 +223,6 @@ class MyAppState extends State<MyApp> {
 
   // SEAMLESS - UPI
   Future<void> seamlessUPIPayment() async {
-    String orderId = "ORDER_ID";
-    String stage = "PROD";
-    String orderAmount = "ORDER_AMOUNT";
-    String tokenData = "TOKEN_DATA";
-    String customerName = "Customer Name";
-    String orderNote = "Order_Note";
-    String orderCurrency = "INR";
-    String appId = "APP_ID";
-    String customerPhone = "Customer Phone";
-    String customerEmail = "sample@gmail.com";
-    String notifyUrl = "https://test.gocashfree.com/notify";
-
     Map<String, dynamic> inputParams = {
       "orderId": orderId,
       "orderAmount": orderAmount,
