@@ -9,7 +9,6 @@ environment:
   sdk: ">=2.18.2 <3.0.0"
 
 dependencies:
-  cashfree_pg: ^2.0.12+32
   flutter:
     sdk: flutter
 
