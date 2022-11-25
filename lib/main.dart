@@ -1,34 +1,20 @@
-import 'dart:convert';
-import 'dart:developer';
-
+import 'package:cashfree_pg/cashfree_pg.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cashfree_pg_sdk/api/cferrorresponse/cferrorresponse.dart';
-import 'package:flutter_cashfree_pg_sdk/api/cfpayment/cfdropcheckoutpayment.dart';
-import 'package:flutter_cashfree_pg_sdk/api/cfpaymentcomponents/cfpaymentcomponent.dart';
-import 'package:flutter_cashfree_pg_sdk/api/cfpaymentgateway/cfpaymentgatewayservice.dart';
-import 'package:flutter_cashfree_pg_sdk/api/cfsession/cfsession.dart';
-import 'package:flutter_cashfree_pg_sdk/api/cftheme/cftheme.dart';
-import 'package:flutter_cashfree_pg_sdk/utils/cfenums.dart';
-import 'package:flutter_cashfree_pg_sdk/utils/cfexceptions.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(MaterialApp(home: MyApp()));
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
-
   @override
-  State<MyApp> createState() => _MyAppState();
+  _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  var cfPaymentGatewayService = CFPaymentGatewayService();
+  var _selectedApp;
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    cfPaymentGatewayService.setCallback(verifyPayment, onError);
   }
 
   @override
@@ -36,75 +22,385 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: const Text('Cashfree SDK Sample'),
         ),
-        body: Center(
-          child: Column(
-            children: [TextButton(onPressed: pay, child: const Text("Pay"))],
-          ),
+        body: Column(
+          children: [
+            Center(
+              child: TextButton(
+                child: const Text('WEB CHECKOUT'),
+                onPressed: () => makePayment(),
+              ),
+            ),
+            Center(
+              child: TextButton(
+                child: const Text('SEAMLESS CARD'),
+                onPressed: () => seamlessCardPayment(),
+              ),
+            ),
+            Center(
+              child: TextButton(
+                child: const Text('SEAMLESS NETBANKING'),
+                onPressed: () => seamlessNetbankingPayment(),
+              ),
+            ),
+            Center(
+              child: TextButton(
+                child: const Text('SEAMLESS WALLET'),
+                onPressed: () => seamlessWalletPayment(),
+              ),
+            ),
+            Center(
+              child: TextButton(
+                child: const Text('SEAMLESS UPI COLLECT'),
+                onPressed: () => seamlessUPIPayment(),
+              ),
+            ),
+            Center(
+              child: TextButton(
+                child: const Text('SEAMLESS PAYPAL'),
+                onPressed: () => seamlessPayPalPayment(),
+              ),
+            ),
+            Center(
+              child: TextButton(
+                child: const Text('UPI INTENT'),
+                onPressed: () => makeUpiPayment(),
+              ),
+            ),
+            Center(
+              child: TextButton(
+                child: const Text('GET INSTALLED UPI APPS'),
+                onPressed: () => getUPIApps(),
+              ),
+            ),
+            Center(
+              child: TextButton(
+                child: const Text('SEAMLESS UPI INTENT'),
+                onPressed: () => seamlessUPIIntent(),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  void verifyPayment(String orderId) {
-    print("Verify Payment");
+  void getUPIApps() {
+    CashfreePGSDK.getUPIApps().then((value) => {
+          if (value != null && value.isNotEmpty) {_selectedApp = value[0]}
+        });
   }
 
-  void onError(CFErrorResponse errorResponse, String orderId) {
-    final errorData = {
-      'orderId': orderId,
-      'code': errorResponse.getCode(),
-      'Message': errorResponse.getMessage(),
-      'getStatus': errorResponse.getStatus(),
-      'getType': errorResponse.getType(),
+  // WEB Intent
+  makePayment() {
+    //Replace with actual values
+    String orderId = "ORDER_ID";
+    String stage = "PROD";
+    String orderAmount = "ORDER_AMOUNT";
+    String tokenData = "TOKEN_DATA";
+    String customerName = "Customer Name";
+    String orderNote = "Order_Note";
+    String orderCurrency = "INR";
+    String appId = "APP_ID";
+    String customerPhone = "Customer Phone";
+    String customerEmail = "sample@gmail.com";
+    String notifyUrl = "https://test.gocashfree.com/notify";
+
+    Map<String, dynamic> inputParams = {
+      "orderId": orderId,
+      "orderAmount": orderAmount,
+      "customerName": customerName,
+      "orderNote": orderNote,
+      "orderCurrency": orderCurrency,
+      "appId": appId,
+      "customerPhone": customerPhone,
+      "customerEmail": customerEmail,
+      "stage": stage,
+      "tokenData": tokenData,
+      "notifyUrl": notifyUrl
     };
-    log(
-      "Error while making payment",
-      error: json.encode(errorData),
-    );
+
+    CashfreePGSDK.doPayment(inputParams)
+        .then((value) => value?.forEach((key, value) {
+              print("$key : $value");
+              //Do something with the result
+            }));
   }
 
-  String orderId = "order_2613772GzJmBHfAGqJDzC3D8ODSG8x61d";
-  String orderToken = "RdnhlZ3zTrAJn7IYLF5x";
-  CFEnvironment environment = CFEnvironment.SANDBOX;
+  // SEAMLESS - CARD
+  Future<void> seamlessCardPayment() async {
+    String orderId = "order_1950952I1YUlOHRNZPpTVVNZMMJx0qeW7";
+    String stage = "TEST";
+    String orderAmount = "15";
+    String tokenData =
+        "px9JCN4MzUIJiOicGbhJCLiQ1VKJiOiAXe0Jye.vsQfiQDMjJTY0IGN0ADOzYjI6ICdsF2cfJCLwgTNyQTOxcjNxojIwhXZiwiIS5USiojI5NmblJnc1NkclRmcvJCL1EjOiQnb19WbBJXZkJ3biwiI3cVZxBDeK1UTa5kVWRFcQplTSh0TsVVWxkkM1kDM1kTMfJXZkJ3biojIklkclRmcvJye.khY9qdJzWklh1tP2CHkgRKYqELY6SPs-vju3AnqVv0Hp6eDDFDxarDuzCMgxpQNWcX";
+    String customerName = "Customer Name";
+    String orderNote = "Order_Note";
+    String orderCurrency = "INR";
+    String appId = "1950953d7e9231a3f1df2c9a69590591";
+    String customerPhone = "9638306280";
+    String customerEmail = "sample@gmail.com";
+    String notifyUrl = "https://test.gocashfree.com/notify";
 
-  CFSession? createSession() {
-    try {
-      var session = CFSessionBuilder()
-          .setEnvironment(environment)
-          .setOrderId(orderId)
-          .setOrderToken(orderToken)
-          .build();
-      return session;
-    } on CFException catch (e) {
-      print(e.message);
-    }
-    return null;
+    Map<String, dynamic> inputParams = {
+      "orderId": orderId,
+      "orderAmount": orderAmount,
+      "customerName": customerName,
+      "orderNote": orderNote,
+      "orderCurrency": orderCurrency,
+      "appId": appId,
+      "customerPhone": customerPhone,
+      "customerEmail": customerEmail,
+      "stage": stage,
+      "tokenData": tokenData,
+      "notifyUrl": notifyUrl,
+
+      // EXTRA THINGS THAT NEEDS TO BE ADDED
+      "paymentOption": "card",
+      "card_number": "4706131211212123",
+      "card_expiryMonth": "07",
+      "card_expiryYear": "2023",
+      "card_holder": "Test",
+      "card_cvv": "123"
+    };
+
+    CashfreePGSDK.doPayment(inputParams)
+        .then((value) => value?.forEach((key, value) {
+              print("$key : $value");
+              //Do something with the result
+            }));
   }
 
-  pay() async {
-    try {
-      var session = createSession();
-      List<CFPaymentModes> components = <CFPaymentModes>[];
-      var paymentComponent =
-          CFPaymentComponentBuilder().setComponents(components).build();
+  // SEAMLESS - NETBANKING
+  Future<void> seamlessNetbankingPayment() async {
+    String orderId = "ORDER_ID";
+    String stage = "PROD";
+    String orderAmount = "ORDER_AMOUNT";
+    String tokenData = "TOKEN_DATA";
+    String customerName = "Customer Name";
+    String orderNote = "Order_Note";
+    String orderCurrency = "INR";
+    String appId = "APP_ID";
+    String customerPhone = "Customer Phone";
+    String customerEmail = "sample@gmail.com";
+    String notifyUrl = "https://test.gocashfree.com/notify";
 
-      var theme = CFThemeBuilder()
-          .setNavigationBarBackgroundColorColor("#FF0000")
-          .setPrimaryFont("Menlo")
-          .setSecondaryFont("Futura")
-          .build();
+    Map<String, dynamic> inputParams = {
+      "orderId": orderId,
+      "orderAmount": orderAmount,
+      "customerName": customerName,
+      "orderNote": orderNote,
+      "orderCurrency": orderCurrency,
+      "appId": appId,
+      "customerPhone": customerPhone,
+      "customerEmail": customerEmail,
+      "stage": stage,
+      "tokenData": tokenData,
+      "notifyUrl": notifyUrl,
 
-      var cfDropCheckoutPayment = CFDropCheckoutPaymentBuilder()
-          .setSession(session!)
-          .setPaymentComponent(paymentComponent)
-          .setTheme(theme)
-          .build();
+      // EXTRA THINGS THAT NEEDS TO BE ADDED
+      "paymentOption": "nb",
+      "paymentCode":
+          "ENTER Code", // Find Code here https://docs.cashfree.com/docs/net-banking
+    };
 
-      cfPaymentGatewayService.doPayment(cfDropCheckoutPayment);
-    } on CFException catch (e) {
-      print(e.message);
-    }
+    CashfreePGSDK.doPayment(inputParams)
+        .then((value) => value?.forEach((key, value) {
+              print("$key : $value");
+              //Do something with the result
+            }));
+  }
+
+  // SEAMLESS - WALLET
+  Future<void> seamlessWalletPayment() async {
+    String orderId = "ORDER_ID";
+    String stage = "PROD";
+    String orderAmount = "ORDER_AMOUNT";
+    String tokenData = "TOKEN_DATA";
+    String customerName = "Customer Name";
+    String orderNote = "Order_Note";
+    String orderCurrency = "INR";
+    String appId = "APP_ID";
+    String customerPhone = "Customer Phone";
+    String customerEmail = "sample@gmail.com";
+    String notifyUrl = "https://test.gocashfree.com/notify";
+
+    Map<String, dynamic> inputParams = {
+      "orderId": orderId,
+      "orderAmount": orderAmount,
+      "customerName": customerName,
+      "orderNote": orderNote,
+      "orderCurrency": orderCurrency,
+      "appId": appId,
+      "customerPhone": customerPhone,
+      "customerEmail": customerEmail,
+      "stage": stage,
+      "tokenData": tokenData,
+      "notifyUrl": notifyUrl,
+
+      // EXTRA THINGS THAT NEEDS TO BE ADDED
+      "paymentOption": "wallet",
+      "paymentCode":
+          "ENTER Code", // Find Code here https://docs.cashfree.com/docs/wallets
+    };
+
+    CashfreePGSDK.doPayment(inputParams)
+        .then((value) => value?.forEach((key, value) {
+              print("$key : $value");
+              //Do something with the result
+            }));
+  }
+
+  // SEAMLESS - UPI
+  Future<void> seamlessUPIPayment() async {
+    String orderId = "ORDER_ID";
+    String stage = "PROD";
+    String orderAmount = "ORDER_AMOUNT";
+    String tokenData = "TOKEN_DATA";
+    String customerName = "Customer Name";
+    String orderNote = "Order_Note";
+    String orderCurrency = "INR";
+    String appId = "APP_ID";
+    String customerPhone = "Customer Phone";
+    String customerEmail = "sample@gmail.com";
+    String notifyUrl = "https://test.gocashfree.com/notify";
+
+    Map<String, dynamic> inputParams = {
+      "orderId": orderId,
+      "orderAmount": orderAmount,
+      "customerName": customerName,
+      "orderNote": orderNote,
+      "orderCurrency": orderCurrency,
+      "appId": appId,
+      "customerPhone": customerPhone,
+      "customerEmail": customerEmail,
+      "stage": stage,
+      "tokenData": tokenData,
+      "notifyUrl": notifyUrl,
+
+      // EXTRA THINGS THAT NEEDS TO BE ADDED
+      "paymentOption": "upi",
+      "upi_vpa": "ENTER Correct UPI ID here"
+    };
+
+    CashfreePGSDK.doPayment(inputParams)
+        .then((value) => value?.forEach((key, value) {
+              print("$key : $value");
+              //Do something with the result
+            }));
+  }
+
+  // SEAMLESS - Paypal
+  Future<void> seamlessPayPalPayment() async {
+    String orderId = "ORDER_ID";
+    String stage = "PROD";
+    String orderAmount = "ORDER_AMOUNT";
+    String tokenData = "TOKEN_DATA";
+    String customerName = "Customer Name";
+    String orderNote = "Order_Note";
+    String orderCurrency = "INR";
+    String appId = "APP_ID";
+    String customerPhone = "Customer Phone";
+    String customerEmail = "sample@gmail.com";
+    String notifyUrl = "https://test.gocashfree.com/notify";
+
+    Map<String, dynamic> inputParams = {
+      "orderId": orderId,
+      "orderAmount": orderAmount,
+      "customerName": customerName,
+      "orderNote": orderNote,
+      "orderCurrency": orderCurrency,
+      "appId": appId,
+      "customerPhone": customerPhone,
+      "customerEmail": customerEmail,
+      "stage": stage,
+      "tokenData": tokenData,
+      "notifyUrl": notifyUrl,
+
+      // EXTRA THINGS THAT NEEDS TO BE ADDED
+      "paymentOption": "paypal"
+    };
+
+    CashfreePGSDK.doPayment(inputParams)
+        .then((value) => value?.forEach((key, value) {
+              print("$key : $value");
+              //Do something with the result
+            }));
+  }
+
+  // UPI Intent
+  Future<void> makeUpiPayment() async {
+    //Replace with actual values
+    String orderId = "ORDER_ID";
+    String stage = "PROD";
+    String orderAmount = "ORDER_AMOUNT";
+    String tokenData = "TOKEN_DATA";
+    String customerName = "Customer Name";
+    String orderNote = "Order_Note";
+    String orderCurrency = "INR";
+    String appId = "APP_ID";
+    String customerPhone = "Customer Phone";
+    String customerEmail = "sample@gmail.com";
+    String notifyUrl = "https://test.gocashfree.com/notify";
+
+    Map<String, dynamic> inputParams = {
+      "orderId": orderId,
+      "orderAmount": orderAmount,
+      "customerName": customerName,
+      "orderNote": orderNote,
+      "orderCurrency": orderCurrency,
+      "appId": appId,
+      "customerPhone": customerPhone,
+      "customerEmail": customerEmail,
+      "stage": stage,
+      "tokenData": tokenData,
+      "notifyUrl": notifyUrl
+    };
+
+    CashfreePGSDK.doUPIPayment(inputParams)
+        .then((value) => value?.forEach((key, value) {
+              print("$key : $value");
+              //Do something with the result
+            }));
+  }
+
+  // SEAMLESS UPI Intent
+  Future<void> seamlessUPIIntent() async {
+    //Replace with actual values
+    String orderId = "ORDER_ID";
+    String stage = "PROD";
+    String orderAmount = "ORDER_AMOUNT";
+    String tokenData = "TOKEN_DATA";
+    String customerName = "Customer Name";
+    String orderNote = "Order_Note";
+    String orderCurrency = "INR";
+    String appId = "APP_ID";
+    String customerPhone = "Customer Phone";
+    String customerEmail = "sample@gmail.com";
+    String notifyUrl = "https://test.gocashfree.com/notify";
+
+    Map<String, dynamic> inputParams = {
+      "orderId": orderId,
+      "orderAmount": orderAmount,
+      "customerName": customerName,
+      "orderNote": orderNote,
+      "orderCurrency": orderCurrency,
+      "appId": appId,
+      "customerPhone": customerPhone,
+      "customerEmail": customerEmail,
+      "stage": stage,
+      "tokenData": tokenData,
+      "notifyUrl": notifyUrl,
+
+      // For seamless UPI Intent
+      "appName": _selectedApp["id"]
+    };
+
+    CashfreePGSDK.doUPIPayment(inputParams)
+        .then((value) => value?.forEach((key, value) {
+              print("$key : $value");
+              //Do something with the result
+            }));
   }
 }
