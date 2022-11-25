@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -39,25 +40,27 @@ class MyAppState extends State<MyApp> {
     };
     var request = http.Request('GET',
         Uri.parse('https://sandbox.cashfree.com/pg/orders/$orderID/payments'));
-
     request.headers.addAll(headers);
-
     http.StreamedResponse response = await request.send();
+    final data = await response.stream.bytesToString();
+    print(data);
 
     if (response.statusCode == 200) {
-      final data = await response.stream.bytesToString();
-      final paymentStatusReceived = json.decode(data) != [];
-      if (paymentStatusReceived) {
+      final paymentStatusReceived = (json.decode(data) as List)
+          .where((e) => e["payment_status"] == "SUCCESS");
+      if (paymentStatusReceived.isNotEmpty) {
         nav.push(
           MaterialPageRoute(
-            builder: (context) => const Scaffold(
-              body: Text('Payment status received'),
+            builder: (context) => Scaffold(
+              appBar: AppBar(
+                title: const Text('Result'),
+              ),
+              body: Text(paymentStatusReceived.first.toString()),
             ),
           ),
         );
         return true;
       }
-      print(await response.stream.bytesToString());
     } else {
       print(response.reasonPhrase);
     }
@@ -73,7 +76,7 @@ class MyAppState extends State<MyApp> {
     var request = http.Request(
         'POST', Uri.parse('https://sandbox.cashfree.com/pg/orders/pay'));
     request.body = json.encode({
-      "order_token": "b9oHO7B1R4yrbkVgmCeY",
+      "order_token": "TQ4TvAPntcaGaNbgdzRb",
       "payment_method": {
         "card": {
           "channel": "link",
@@ -98,8 +101,10 @@ class MyAppState extends State<MyApp> {
       // _launchUrl(paymentURL);
       bool isDone = false;
       while (!isDone) {
+        log('Waiting for 2 seconds');
+        await Future.delayed(const Duration(seconds: 2));
         isDone =
-            await listenForPayment('order_1950952I1gwhLHugrTt0WxEKYxM6K81MG');
+            await listenForPayment('order_1950952I2GrdaRnTKoXGhcqXSiyMM1nEr');
       }
     } else {
       print(response.reasonPhrase);
