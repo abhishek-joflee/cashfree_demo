@@ -76,7 +76,7 @@ class MyAppState extends State<MyApp> {
     var request = http.Request(
         'POST', Uri.parse('https://sandbox.cashfree.com/pg/orders/pay'));
     request.body = json.encode({
-      "order_token": "TQ4TvAPntcaGaNbgdzRb",
+      "order_token": "sRB8ghymq3HUJwdgIPSj",
       "payment_method": {
         "card": {
           "channel": "link",
@@ -102,9 +102,9 @@ class MyAppState extends State<MyApp> {
       bool isDone = false;
       while (!isDone) {
         log('Waiting for 2 seconds');
-        await Future.delayed(const Duration(seconds: 2));
+        await Future.delayed(const Duration(milliseconds: 1500));
         isDone =
-            await listenForPayment('order_1950952I2GrdaRnTKoXGhcqXSiyMM1nEr');
+            await listenForPayment('order_1950952I2IlprGQHxhJFXFiIfDQOBo2Re');
       }
     } else {
       print(response.reasonPhrase);
